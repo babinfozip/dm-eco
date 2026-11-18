@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>동명 에코 교실 알리미</title>
+<title>동명 에코 교실</title>
 <meta name="theme-color" content="#fffdf6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
@@ -11,19 +11,23 @@
   :root{
     --desk:#e3edf3; --paper:#fffdf6; --ink:#2b3a55; --pencil:#5b6475;
     --heat:#e0613a; --heatbg:#fde9e1; --cool:#2f7fc1; --coolbg:#e2f0fb; --leaf:#2e8b57; --leafbg:#e5f4ea;
-    --away:#fff1b8; --chip:#eef2f5; --pick:#ffcf6e;
+    --away:#fff1b8; --chip:#eef2f5; --pick:#ffcf6e; --bar:#7bc47f; --bar2:#f5c36b;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--desk);color:var(--ink);font-family:'Gaegu',cursive;font-size:21px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 60px}
-  .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .wrap{max-width:680px;margin:0 auto;padding:20px 16px 60px}
+  .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   h1{font-family:'Jua',sans-serif;font-size:28px;margin:0}
   h1 small{display:block;font-family:'Gaegu',cursive;font-size:18px;color:var(--pencil)}
   select,button{font-family:'Jua',sans-serif;font-size:17px;border:0;border-radius:12px;min-height:44px;padding:0 12px;cursor:pointer;color:var(--ink);background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.08)}
   .cls{margin-left:auto;display:flex;gap:6px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .tab{background:#eef2f5}
+  .tab[aria-selected="true"]{background:var(--pick)}
 
-  .card{background:var(--paper);border-radius:16px;box-shadow:0 2px 0 #c9d6de,0 10px 24px rgba(30,60,90,.10);padding:18px;margin-bottom:14px}
+  .card{background:var(--paper);border-radius:16px;box-shadow:0 2px 0 #c9d6de,0 10px 24px rgba(30,60,90,.10);padding:16px 18px;margin-bottom:14px}
   .card h2{font-family:'Jua',sans-serif;font-size:19px;margin:0 0 10px;color:var(--pencil);font-weight:400}
+  .notice{background:#eef1fb;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-weight:700}
 
   .verdict{display:flex;align-items:center;gap:12px;border-radius:14px;padding:14px 16px}
   .verdict .big{font-size:42px}
@@ -37,52 +41,77 @@
   .hours b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:18px}
   .hours .cold{background:#dcecf8} .hours .hot{background:#fde3d8}
 
-  .period{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px dashed #d6dde3}
+  .todo{margin:0;padding:0;list-style:none}
+  .todo li{font-size:21px;font-weight:700;padding:8px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px dashed #d6dde3}
+  .todo li:last-child{border-bottom:0}
+  .todo li .txt{flex:1 1 220px}
+  .done{background:var(--chip);box-shadow:none;font-size:16px}
+  .done[aria-pressed="true"]{background:var(--leafbg);color:var(--leaf)}
+  .period{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px dashed #d6dde3}
   .period:last-child{border-bottom:0}
   .period .no{font-family:'Jua',sans-serif;width:52px;color:var(--pencil)}
-  .period .subj{font-weight:700;font-size:23px}
-  .period .tag{margin-left:auto;font-size:17px;font-weight:700;border-radius:12px;padding:2px 10px;background:var(--chip)}
+  .period .subj{font-weight:700;font-size:22px}
+  .period .tag{margin-left:auto;font-size:17px;font-weight:700;border-radius:12px;padding:2px 10px;background:#fff}
   .period.away{background:var(--away);border-radius:10px}
-  .period.away .tag{background:#fff}
-  .todo{margin:0;padding:0;list-style:none}
-  .todo li{font-size:21px;font-weight:700;padding:8px 0;display:flex;gap:10px}
-  .todo li span{flex:none}
   .note{color:var(--pencil);font-size:18px}
-
   details{margin-top:6px} summary{cursor:pointer;color:var(--pencil);font-size:18px;min-height:44px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .chip{font-family:'Gaegu',cursive;font-weight:700;font-size:19px;background:var(--chip);border-radius:22px}
   .chip[aria-pressed="true"]{background:var(--pick)}
+
+  .king{font-family:'Jua',sans-serif;font-size:24px;background:#fff6d6;border-radius:14px;padding:14px;text-align:center;margin-bottom:12px}
+  .bars{display:grid;gap:8px}
+  .bars .r{display:grid;grid-template-columns:76px 1fr 64px;align-items:center;gap:8px;font-size:19px}
+  .bars .r.me{font-weight:700}
+  .bars .t{background:var(--chip);border-radius:8px;height:22px;overflow:hidden}
+  .bars .t i{display:block;height:100%;background:var(--bar);border-radius:8px}
+  .bars .n{text-align:right;color:var(--pencil)}
+  .big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .big3 div{background:#f3f7f1;border-radius:12px;padding:10px;text-align:center;font-size:17px;color:var(--pencil)}
+  .big3 b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:24px;color:var(--ink)}
+  .sched{margin:0;padding-left:20px;font-size:19px}
+  svg text{font-family:'Gaegu',cursive}
   .foot{color:var(--pencil);font-size:17px;line-height:1.4}
+  .hidden{display:none !important}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <h1>🌱 에코 교실 알리미<small>오늘 난방·냉방은? 교실이 비는 시간은?</small></h1>
+    <h1>🌱 동명 에코 교실<small>냉난방 판단 · 끄고 갔어요 · 아낀 에너지</small></h1>
     <div class="cls">
       <select id="grade" aria-label="학년"><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option></select>
       <select id="cls" aria-label="반"></select>
     </div>
   </div>
 
-  <div class="card">
-    <h2>오늘 우리 교실 냉난방</h2>
-    <div id="weather"><div class="note">날씨를 불러오는 중이에요…</div></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" data-v="today" aria-selected="true">🌡 오늘</button>
+    <button class="tab" data-v="school" aria-selected="false">🏆 우리 학교</button>
+    <button class="tab" data-v="energy" aria-selected="false">⚡ 아낀 에너지</button>
   </div>
 
-  <div class="card">
-    <h2>교실이 비는 시간 · 끄고 가요</h2>
-    <div id="todo"><div class="note">시간표를 불러오는 중이에요…</div></div>
-    <div id="table" style="margin-top:8px"></div>
-    <details>
-      <summary>⚙️ 교실 밖에서 하는 과목 고르기</summary>
-      <div class="chips" id="awayPick"></div>
-    </details>
+  <div id="vToday">
+    <div class="card">
+      <h2>오늘 우리 교실 냉난방</h2>
+      <div id="notice"></div>
+      <div id="weather"><div class="note">날씨를 불러오는 중이에요…</div></div>
+    </div>
+    <div class="card">
+      <h2>교실이 비는 시간 · 끄고 가요</h2>
+      <div id="todo"><div class="note">시간표를 불러오는 중이에요…</div></div>
+      <div id="table" style="margin-top:8px"></div>
+      <details>
+        <summary>⚙️ 교실 밖에서 하는 과목 고르기</summary>
+        <div class="chips" id="awayPick"></div>
+      </details>
+    </div>
   </div>
+  <div class="card hidden" id="vSchool"></div>
+  <div class="card hidden" id="vEnergy"></div>
 
-  <p class="foot">※ 학교 실내 온도 기준은 18~28℃예요(학교보건법 시행규칙). 바깥 기온 기준은 선생님이 config.js에서 바꿀 수 있어요.<br>
-  ※ 날씨: Open-Meteo(대전) · 시간표: 나이스 교육정보 개방 포털</p>
+  <p class="foot">※ 학교 실내 온도 기준은 18~28℃예요(학교보건법 시행규칙). 바깥 기온 기준과 전기 계산값은 선생님이 config.js에서 바꿀 수 있어요.<br>
+  ※ 날씨: Open-Meteo·wttr.in(대전) · 시간표·학사일정: 나이스 교육정보 개방 포털 · 「끄고 갔어요」는 반 이름만 저장해요.</p>
 </div>
 
 <script src="config.js"></script>
@@ -90,10 +119,16 @@
 const CONF = window.APP_CONFIG || {};
 const OFFICE = 'G10', SCHOOL = '7441032';
 const NEIS_KEY = String(CONF.NEIS_KEY || '').trim();
+const SHARE_URL = String(CONF.SHARE_URL || '').trim();
 const HEAT_BELOW = +(CONF.HEAT_BELOW ?? 10), COOL_ABOVE = +(CONF.COOL_ABOVE ?? 28);
 const LAT = CONF.LAT ?? 36.35, LON = CONF.LON ?? 127.38;
+// 아낀 에너지 계산(추정값): 한 번 끄면 한 교시 동안 아낀 것으로 셈
+const KW = { heat: +(CONF.HEATER_KW ?? 3), cool: +(CONF.AC_KW ?? 3), light: +(CONF.LIGHT_KW ?? 0.4) };
+const PERIOD_MIN = +(CONF.PERIOD_MIN ?? 45), CO2 = +(CONF.CO2_KG_PER_KWH ?? 0.4781);
 const CLASSES = { 1: 3, 2: 3, 3: 2 };
+const ALL_GC = ['1-1', '1-2', '1-3', '2-1', '2-2', '2-3', '3-1', '3-2'];
 const DEFAULT_AWAY = ['체육', '정보', '음악', '미술', '과학', '연주와 창작', '영상 창작', '4차산업혁명과 크리에이팅'];
+const HOME = 99;   // 하교
 
 const store = {
   get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
@@ -102,14 +137,26 @@ const store = {
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const ymd = d => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const md = s => `${+s.slice(4, 6)}/${+s.slice(6)}`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const norm = s => String(s).replace(/[\s·Ⅰ-Ⅻ]/g, '');
+const gcName = gc => gc.replace('-', '학년 ') + '반';
 
 let cfg = Object.assign({ grade: '1', cls: '1', away: DEFAULT_AWAY }, store.get('eco-cfg', {}));
 const qs = new URLSearchParams(location.search).get('반');
 if (qs && /^[1-3]-[1-3]$/.test(qs) && !store.get('eco-cfg', null)){ [cfg.grade, cfg.cls] = qs.split('-'); }
-let heatMode = null;   // 'heat' | 'cool' | 'off'
-let periods = null;
+let device = store.get('eco-device', '');
+if (!device){ device = 'd' + Math.random().toString(36).slice(2, 10); store.set('eco-device', device); }
+const gcOf = () => `${cfg.grade}-${cfg.cls}`;
+const TODAY = ymd(new Date());
+let heatMode = null, periods = null, offs = [], view = 'today';
+
+async function neis(service, params){
+  const key = NEIS_KEY ? `&KEY=${encodeURIComponent(NEIS_KEY)}` : '';
+  const j = await (await fetch(`https://open.neis.go.kr/hub/${service}?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${OFFICE}&SD_SCHUL_CODE=${SCHOOL}${key}&${params}`)).json();
+  return j[service] ? j[service][1].row : [];
+}
 
 // ---------- 학년·반 ----------
 function fillClass(){
@@ -118,18 +165,39 @@ function fillClass(){
   if (+cfg.cls > CLASSES[cfg.grade]) cfg.cls = '1';
   $('cls').value = cfg.cls;
 }
-$('grade').onchange = () => { cfg.grade = $('grade').value; cfg.cls = '1'; save(); fillClass(); loadTable(); };
-$('cls').onchange = () => { cfg.cls = $('cls').value; save(); loadTable(); };
+$('grade').onchange = () => { cfg.grade = $('grade').value; cfg.cls = '1'; save(); fillClass(); loadTable(); render(); };
+$('cls').onchange = () => { cfg.cls = $('cls').value; save(); loadTable(); render(); };
 function save(){ store.set('eco-cfg', cfg); }
 
+// ---------- 오늘 학사일정 ----------
+async function loadNotice(){
+  try{
+    const rows = await neis('SchoolSchedule', `AA_YMD=${TODAY}`);
+    const ev = rows.map(r => r.EVENT_NM).filter(n => n && !/토요휴업일/.test(n));
+    $('notice').innerHTML = ev.length ? `<div class="notice">📅 오늘 학교 일정: ${ev.map(esc).join(', ')}</div>` : '';
+  }catch(e){}
+}
+
 // ---------- 날씨 → 냉난방 판단 ----------
+const fetchJson = (url, ms = 8000) => Promise.race([
+  fetch(url).then(r => r.json()),
+  new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))
+]);
+// 날씨: Open-Meteo(1시간 간격) → 안 되면 wttr.in(3시간 간격)
+async function getWeather(){
+  try{
+    const j = await fetchJson(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m&hourly=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1`);
+    return { now: j.current.temperature_2m, hours: j.hourly.time.map((t, i) => ({ h: +t.slice(11, 13), t: j.hourly.temperature_2m[i] })).filter(x => x.h >= 9 && x.h <= 16) };
+  }catch(e){
+    const j = await fetchJson('https://wttr.in/Daejeon?format=j1');
+    return { now: +j.current_condition[0].temp_C, hours: j.weather[0].hourly.map(x => ({ h: +x.time / 100, t: +x.tempC })).filter(x => x.h >= 9 && x.h <= 16) };
+  }
+}
 async function loadWeather(){
   try{
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m&hourly=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1`;
-    const j = await (await fetch(url)).json();
-    const hours = j.hourly.time.map((t, i) => ({ h: +t.slice(11, 13), t: j.hourly.temperature_2m[i] })).filter(x => x.h >= 9 && x.h <= 16);
+    const w = await getWeather(), hours = w.hours;
     const lo = Math.min(...hours.map(x => x.t)), hi = Math.max(...hours.map(x => x.t));
-    const now = Math.round(j.current.temperature_2m);
+    const now = Math.round(w.now);
     heatMode = lo < HEAT_BELOW ? 'heat' : hi >= COOL_ABOVE ? 'cool' : 'off';
     const V = {
       heat: ['🔥', '난방 켜요', `수업 시간 바깥 최저 ${Math.round(lo)}℃ · 교실은 18~20℃로 맞춰요`],
@@ -153,10 +221,7 @@ async function loadTable(){
   try{
     if (d.getDay() === 0 || d.getDay() === 6){ periods = []; }
     else{
-      const key = NEIS_KEY ? `&KEY=${encodeURIComponent(NEIS_KEY)}` : '';
-      const url = `https://open.neis.go.kr/hub/misTimetable?Type=json&pSize=20&ATPT_OFCDC_SC_CODE=${OFFICE}&SD_SCHUL_CODE=${SCHOOL}${key}&ALL_TI_YMD=${ymd(d)}&GRADE=${cfg.grade}&CLASS_NM=${cfg.cls}`;
-      const j = await (await fetch(url)).json();
-      const rows = j.misTimetable ? j.misTimetable[1].row : [];
+      const rows = await neis('misTimetable', `ALL_TI_YMD=${TODAY}&GRADE=${cfg.grade}&CLASS_NM=${cfg.cls}`);
       const by = new Map();
       rows.forEach(r => { const p = +r.PERIO; if (!by.has(p)) by.set(p, r.ITRT_CNTNT.trim()); });
       periods = [...by.entries()].sort((a, b) => a[0] - b[0]).map(([per, subj]) => ({ per, subj }));
@@ -164,19 +229,44 @@ async function loadTable(){
   }catch(e){ periods = 'error'; }
   renderTodo();
 }
+
+// ---------- 공유 서버(끄고 갔어요) ----------
+async function pull(from, to){
+  if (!SHARE_URL) return;
+  try{
+    const j = await (await fetch(`${SHARE_URL}?from=${from}&to=${to}`)).json();
+    if (j.ok){ offs = offs.filter(r => r.date < from || r.date > to).concat(j.rows); }
+  }catch(e){}
+}
+const doneToday = per => offs.some(r => r.date === TODAY && r.gc === gcOf() && r.per === per);
+async function toggle(per, what){
+  const on = !doneToday(per);
+  const res = await fetch(SHARE_URL, { method: 'POST', body: JSON.stringify({ gc: gcOf(), date: TODAY, per, what, on, did: device }) });
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || '저장하지 못했어요');
+  offs = offs.filter(r => r.date !== TODAY).concat(j.rows);
+}
+
 function renderTodo(){
   const thing = heatMode === 'heat' ? '난방기·전등' : heatMode === 'cool' ? '에어컨·전등' : '전등';
   if (periods === null){ $('todo').innerHTML = '<div class="note">시간표를 불러오는 중이에요…</div>'; $('table').innerHTML = ''; return; }
   if (periods === 'error'){ $('todo').innerHTML = '<div class="note">시간표를 불러오지 못했어요.</div>'; $('table').innerHTML = ''; return; }
   if (!periods.length){ $('todo').innerHTML = '<div class="note">오늘은 수업이 없어요. 🎉</div>'; $('table').innerHTML = ''; return; }
-  const todo = [];
+  const items = [];
   periods.forEach((p, i) => {
     const before = periods[i - 1];
     if (isAway(p.subj) && !(before && isAway(before.subj)))
-      todo.push(`<li><span>🚪</span>${before ? `${before.per}교시 끝나고` : '아침 조회 끝나고'} → ${p.per}교시 ${esc(p.subj)}: ${thing} 끄고 가요</li>`);
+      items.push({ per: p.per, icon: '🚪', txt: `${before ? `${before.per}교시 끝나고` : '아침 조회 끝나고'} → ${p.per}교시 ${esc(p.subj)}: ${thing} 끄고 가요` });
   });
-  todo.push(`<li><span>🏠</span>하교 전: ${thing}·창문 확인하고 가요</li>`);
-  $('todo').innerHTML = `<ul class="todo">${todo.join('')}</ul>`;
+  items.push({ per: HOME, icon: '🏠', txt: `하교 전: ${thing}·창문 확인하고 가요` });
+  $('todo').innerHTML = `<ul class="todo">${items.map(it => `<li><span>${it.icon}</span><span class="txt">${it.txt}</span>`
+    + (SHARE_URL ? `<button class="done" data-per="${it.per}" aria-pressed="${doneToday(it.per)}">${doneToday(it.per) ? '✅ 끄고 갔어요' : '☐ 끄고 갔어요'}</button>` : '') + '</li>').join('')}</ul>`
+    + (SHARE_URL ? '' : '<p class="foot">※ 「끄고 갔어요」 기록은 선생님이 공유 서버를 연결하면 열려요.</p>');
+  $('todo').querySelectorAll('.done').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try{ await toggle(+b.dataset.per, thing); }catch(e){ alert(e.message); }
+    renderTodo();
+  });
   $('table').innerHTML = periods.map(p => `<div class="period${isAway(p.subj) ? ' away' : ''}"><span class="no">${p.per}교시</span><span class="subj">${esc(p.subj)}</span>${isAway(p.subj) ? '<span class="tag">교실 비어요</span>' : ''}</div>`).join('');
 }
 function renderAwayPick(){
@@ -189,7 +279,81 @@ function renderAwayPick(){
   });
 }
 
-fillClass(); renderAwayPick(); loadWeather(); loadTable();
+// ---------- 우리 학교(이번 주) ----------
+function weekRange(){
+  const m = new Date(); m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
+  const f = new Date(m); f.setDate(f.getDate() + 4);
+  return [ymd(m), ymd(f)];
+}
+async function renderSchool(){
+  const el = $('vSchool');
+  if (!SHARE_URL){ el.innerHTML = '<div class="note">반별 실천 순위는 선생님이 공유 서버를 연결하면 볼 수 있어요.</div>'; return; }
+  const [from, to] = weekRange();
+  el.innerHTML = '<div class="note">불러오는 중이에요…</div>';
+  await pull(from, to);
+  let sched = [];
+  try{ sched = (await neis('SchoolSchedule', `AA_FROM_YMD=${from}&AA_TO_YMD=${to}`)).filter(r => !/토요휴업일/.test(r.EVENT_NM)); }catch(e){}
+  const cnt = Object.fromEntries(ALL_GC.map(gc => [gc, 0]));
+  offs.filter(r => r.date >= from && r.date <= to).forEach(r => { if (cnt[r.gc] != null) cnt[r.gc]++; });
+  const max = Math.max(1, ...Object.values(cnt));
+  const top = Math.max(...Object.values(cnt));
+  const kings = ALL_GC.filter(gc => cnt[gc] === top && top > 0);
+  el.innerHTML = `<h2>🏆 이번 주(${md(from)}~${md(to)}) 에코 왕</h2>
+    <div class="king">${kings.length ? `👑 ${kings.map(gcName).join(', ')} · ${top}번 끄고 갔어요` : '아직 기록이 없어요. 우리 반이 첫 번째가 되어 봐요!'}</div>
+    <div class="bars">${ALL_GC.map(gc => `<div class="r${gc === gcOf() ? ' me' : ''}"><span>${gcName(gc)}</span><span class="t"><i style="width:${cnt[gc] / max * 100}%"></i></span><span class="n">${cnt[gc]}번</span></div>`).join('')}</div>
+    <h2 style="margin-top:16px">📅 이번 주 학교 일정</h2>
+    ${sched.length ? `<ul class="sched">${sched.map(r => `<li>${md(r.AA_YMD)} ${esc(r.EVENT_NM)}</li>`).join('')}</ul>` : '<div class="note">이번 주 특별한 일정이 없어요.</div>'}`;
+}
+
+// ---------- 아낀 에너지(이번 달) ----------
+const kwhOf = r => {
+  const w = r.what || '';
+  const kw = (w.includes('난방') ? KW.heat : 0) + (w.includes('에어컨') ? KW.cool : 0) + (w.includes('전등') ? KW.light : 0);
+  return kw * PERIOD_MIN / 60;
+};
+async function renderEnergy(){
+  const el = $('vEnergy');
+  if (!SHARE_URL){ el.innerHTML = '<div class="note">아낀 에너지는 선생님이 공유 서버를 연결하면 볼 수 있어요.</div>'; return; }
+  const d = new Date(), from = ymd(new Date(d.getFullYear(), d.getMonth(), 1)), to = TODAY;
+  el.innerHTML = '<div class="note">불러오는 중이에요…</div>';
+  await pull(from, to);
+  const rows = offs.filter(r => r.date >= from && r.date <= to);
+  const total = rows.reduce((s, r) => s + kwhOf(r), 0);
+  const byGc = Object.fromEntries(ALL_GC.map(gc => [gc, 0]));
+  rows.forEach(r => { if (byGc[r.gc] != null) byGc[r.gc] += kwhOf(r); });
+  const byDay = {};
+  rows.forEach(r => { byDay[r.date] = (byDay[r.date] || 0) + kwhOf(r); });
+  const days = Object.keys(byDay).sort();
+  const maxG = Math.max(0.1, ...Object.values(byGc)), maxD = Math.max(0.1, ...Object.values(byDay));
+  const W = 600, H = 150, cw = days.length ? (W - 20) / days.length : 0;
+  const svg = days.length ? `<svg viewBox="0 0 ${W} ${H + 24}" width="100%" role="img" aria-label="날짜별 아낀 전기">${days.map((k, i) => {
+    const h = byDay[k] / maxD * (H - 24), x = 10 + i * cw + cw * .15;
+    return `<rect x="${x}" y="${H - h}" width="${cw * .7}" height="${h}" rx="3" fill="#7bc47f"><title>${byDay[k].toFixed(1)} kWh</title></rect>`
+      + `<text x="${x + cw * .35}" y="${H + 18}" font-size="${days.length > 12 ? 11 : 15}" text-anchor="middle" fill="#2b3a55">${md(k)}</text>`;
+  }).join('')}</svg>` : '<div class="note">아직 기록이 없어요.</div>';
+  el.innerHTML = `<h2>⚡ ${+from.slice(4, 6)}월 우리 학교가 아낀 에너지</h2>
+    <div class="big3"><div>끄고 간 횟수<b>${rows.length}번</b></div><div>아낀 전기<b>${total.toFixed(1)} kWh</b></div><div>줄인 탄소<b>${(total * CO2).toFixed(1)} kg</b></div></div>
+    <h2>📈 날짜별 아낀 전기</h2>${svg}
+    <h2 style="margin-top:14px">🏫 반별 아낀 전기</h2>
+    <div class="bars">${ALL_GC.map(gc => `<div class="r${gc === gcOf() ? ' me' : ''}"><span>${gcName(gc)}</span><span class="t"><i style="width:${byGc[gc] / maxG * 100}%;background:var(--bar2)"></i></span><span class="n">${byGc[gc].toFixed(1)}</span></div>`).join('')}</div>
+    <p class="foot">※ 계산 방법(추정): 한 번 끄면 한 교시(${PERIOD_MIN}분) 동안 아낀 것으로 셈해요. 난방기 ${KW.heat}kW · 에어컨 ${KW.cool}kW · 전등 ${KW.light}kW, 전기 1kWh당 탄소 ${CO2}kg으로 계산했어요. 우리 학교 실제 기기 값을 조사해서 바꿔 보세요!</p>`;
+}
+
+// ---------- 탭 ----------
+function render(){
+  $('vToday').classList.toggle('hidden', view !== 'today');
+  $('vSchool').classList.toggle('hidden', view !== 'school');
+  $('vEnergy').classList.toggle('hidden', view !== 'energy');
+  if (view === 'today') renderTodo();
+  if (view === 'school') renderSchool();
+  if (view === 'energy') renderEnergy();
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  view = t.dataset.v; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); render();
+});
+
+fillClass(); renderAwayPick(); loadNotice(); loadWeather(); loadTable();
+pull(TODAY, TODAY).then(renderTodo);
 </script>
 </body>
 </html>

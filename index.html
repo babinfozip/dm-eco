@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>동명 에코 교실 알리미</title>
+<meta name="theme-color" content="#fffdf6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --desk:#e3edf3; --paper:#fffdf6; --ink:#2b3a55; --pencil:#5b6475;
+    --heat:#e0613a; --heatbg:#fde9e1; --cool:#2f7fc1; --coolbg:#e2f0fb; --leaf:#2e8b57; --leafbg:#e5f4ea;
+    --away:#fff1b8; --chip:#eef2f5; --pick:#ffcf6e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--desk);color:var(--ink);font-family:'Gaegu',cursive;font-size:21px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 60px}
+  .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  h1{font-family:'Jua',sans-serif;font-size:28px;margin:0}
+  h1 small{display:block;font-family:'Gaegu',cursive;font-size:18px;color:var(--pencil)}
+  select,button{font-family:'Jua',sans-serif;font-size:17px;border:0;border-radius:12px;min-height:44px;padding:0 12px;cursor:pointer;color:var(--ink);background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+  .cls{margin-left:auto;display:flex;gap:6px}
+
+  .card{background:var(--paper);border-radius:16px;box-shadow:0 2px 0 #c9d6de,0 10px 24px rgba(30,60,90,.10);padding:18px;margin-bottom:14px}
+  .card h2{font-family:'Jua',sans-serif;font-size:19px;margin:0 0 10px;color:var(--pencil);font-weight:400}
+
+  .verdict{display:flex;align-items:center;gap:12px;border-radius:14px;padding:14px 16px}
+  .verdict .big{font-size:42px}
+  .verdict .say{font-family:'Jua',sans-serif;font-size:24px}
+  .verdict .sub{font-size:19px;color:var(--pencil)}
+  .verdict.heat{background:var(--heatbg)} .verdict.heat .say{color:var(--heat)}
+  .verdict.cool{background:var(--coolbg)} .verdict.cool .say{color:var(--cool)}
+  .verdict.off{background:var(--leafbg)} .verdict.off .say{color:var(--leaf)}
+  .hours{display:flex;gap:4px;margin-top:12px;overflow-x:auto}
+  .hours div{flex:1;min-width:44px;text-align:center;border-radius:10px;padding:6px 0;background:var(--chip);font-size:17px}
+  .hours b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:18px}
+  .hours .cold{background:#dcecf8} .hours .hot{background:#fde3d8}
+
+  .period{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px dashed #d6dde3}
+  .period:last-child{border-bottom:0}
+  .period .no{font-family:'Jua',sans-serif;width:52px;color:var(--pencil)}
+  .period .subj{font-weight:700;font-size:23px}
+  .period .tag{margin-left:auto;font-size:17px;font-weight:700;border-radius:12px;padding:2px 10px;background:var(--chip)}
+  .period.away{background:var(--away);border-radius:10px}
+  .period.away .tag{background:#fff}
+  .todo{margin:0;padding:0;list-style:none}
+  .todo li{font-size:21px;font-weight:700;padding:8px 0;display:flex;gap:10px}
+  .todo li span{flex:none}
+  .note{color:var(--pencil);font-size:18px}
+
+  details{margin-top:6px} summary{cursor:pointer;color:var(--pencil);font-size:18px;min-height:44px;display:flex;align-items:center}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .chip{font-family:'Gaegu',cursive;font-weight:700;font-size:19px;background:var(--chip);border-radius:22px}
+  .chip[aria-pressed="true"]{background:var(--pick)}
+  .foot{color:var(--pencil);font-size:17px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>🌱 에코 교실 알리미<small>오늘 난방·냉방은? 교실이 비는 시간은?</small></h1>
+    <div class="cls">
+      <select id="grade" aria-label="학년"><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option></select>
+      <select id="cls" aria-label="반"></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>오늘 우리 교실 냉난방</h2>
+    <div id="weather"><div class="note">날씨를 불러오는 중이에요…</div></div>
+  </div>
+
+  <div class="card">
+    <h2>교실이 비는 시간 · 끄고 가요</h2>
+    <div id="todo"><div class="note">시간표를 불러오는 중이에요…</div></div>
+    <div id="table" style="margin-top:8px"></div>
+    <details>
+      <summary>⚙️ 교실 밖에서 하는 과목 고르기</summary>
+      <div class="chips" id="awayPick"></div>
+    </details>
+  </div>
+
+  <p class="foot">※ 학교 실내 온도 기준은 18~28℃예요(학교보건법 시행규칙). 바깥 기온 기준은 선생님이 config.js에서 바꿀 수 있어요.<br>
+  ※ 날씨: Open-Meteo(대전) · 시간표: 나이스 교육정보 개방 포털</p>
+</div>
+
+<script src="config.js"></script>
+<script>
+const CONF = window.APP_CONFIG || {};
+const OFFICE = 'G10', SCHOOL = '7441032';
+const NEIS_KEY = String(CONF.NEIS_KEY || '').trim();
+const HEAT_BELOW = +(CONF.HEAT_BELOW ?? 10), COOL_ABOVE = +(CONF.COOL_ABOVE ?? 28);
+const LAT = CONF.LAT ?? 36.35, LON = CONF.LON ?? 127.38;
+const CLASSES = { 1: 3, 2: 3, 3: 2 };
+const DEFAULT_AWAY = ['체육', '정보', '음악', '미술', '과학', '연주와 창작', '영상 창작', '4차산업혁명과 크리에이팅'];
+
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const norm = s => String(s).replace(/[\s·Ⅰ-Ⅻ]/g, '');
+
+let cfg = Object.assign({ grade: '1', cls: '1', away: DEFAULT_AWAY }, store.get('eco-cfg', {}));
+const qs = new URLSearchParams(location.search).get('반');
+if (qs && /^[1-3]-[1-3]$/.test(qs) && !store.get('eco-cfg', null)){ [cfg.grade, cfg.cls] = qs.split('-'); }
+let heatMode = null;   // 'heat' | 'cool' | 'off'
+let periods = null;
+
+// ---------- 학년·반 ----------
+function fillClass(){
+  $('grade').value = cfg.grade;
+  $('cls').innerHTML = Array.from({ length: CLASSES[cfg.grade] }, (_, i) => `<option value="${i + 1}">${i + 1}반</option>`).join('');
+  if (+cfg.cls > CLASSES[cfg.grade]) cfg.cls = '1';
+  $('cls').value = cfg.cls;
+}
+$('grade').onchange = () => { cfg.grade = $('grade').value; cfg.cls = '1'; save(); fillClass(); loadTable(); };
+$('cls').onchange = () => { cfg.cls = $('cls').value; save(); loadTable(); };
+function save(){ store.set('eco-cfg', cfg); }
+
+// ---------- 날씨 → 냉난방 판단 ----------
+async function loadWeather(){
+  try{
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m&hourly=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1`;
+    const j = await (await fetch(url)).json();
+    const hours = j.hourly.time.map((t, i) => ({ h: +t.slice(11, 13), t: j.hourly.temperature_2m[i] })).filter(x => x.h >= 9 && x.h <= 16);
+    const lo = Math.min(...hours.map(x => x.t)), hi = Math.max(...hours.map(x => x.t));
+    const now = Math.round(j.current.temperature_2m);
+    heatMode = lo < HEAT_BELOW ? 'heat' : hi >= COOL_ABOVE ? 'cool' : 'off';
+    const V = {
+      heat: ['🔥', '난방 켜요', `수업 시간 바깥 최저 ${Math.round(lo)}℃ · 교실은 18~20℃로 맞춰요`],
+      cool: ['❄️', '냉방 켜요', `수업 시간 바깥 최고 ${Math.round(hi)}℃ · 교실은 26℃ 정도로 맞춰요`],
+      off: ['🌿', '오늘은 꺼도 돼요', `수업 시간 바깥 ${Math.round(lo)}~${Math.round(hi)}℃ · 쉬는 시간에 창문 환기만 해요`]
+    }[heatMode];
+    $('weather').innerHTML = `<div class="verdict ${heatMode}"><span class="big">${V[0]}</span><div><div class="say">${V[1]}</div><div class="sub">지금 대전 ${now}℃ · ${V[2]}</div></div></div>
+      <div class="hours">${hours.map(x => `<div class="${x.t < HEAT_BELOW ? 'cold' : x.t >= COOL_ABOVE ? 'hot' : ''}"><b>${x.h}시</b>${Math.round(x.t)}℃</div>`).join('')}</div>`;
+  }catch(e){
+    heatMode = null;
+    $('weather').innerHTML = '<div class="note">날씨를 불러오지 못했어요. 인터넷 연결을 확인해요.</div>';
+  }
+  renderTodo();
+}
+
+// ---------- 시간표 → 교실이 비는 시간 ----------
+const isAway = subj => cfg.away.some(a => norm(subj).includes(norm(a)));
+async function loadTable(){
+  periods = null; renderTodo();
+  const d = new Date();
+  try{
+    if (d.getDay() === 0 || d.getDay() === 6){ periods = []; }
+    else{
+      const key = NEIS_KEY ? `&KEY=${encodeURIComponent(NEIS_KEY)}` : '';
+      const url = `https://open.neis.go.kr/hub/misTimetable?Type=json&pSize=20&ATPT_OFCDC_SC_CODE=${OFFICE}&SD_SCHUL_CODE=${SCHOOL}${key}&ALL_TI_YMD=${ymd(d)}&GRADE=${cfg.grade}&CLASS_NM=${cfg.cls}`;
+      const j = await (await fetch(url)).json();
+      const rows = j.misTimetable ? j.misTimetable[1].row : [];
+      const by = new Map();
+      rows.forEach(r => { const p = +r.PERIO; if (!by.has(p)) by.set(p, r.ITRT_CNTNT.trim()); });
+      periods = [...by.entries()].sort((a, b) => a[0] - b[0]).map(([per, subj]) => ({ per, subj }));
+    }
+  }catch(e){ periods = 'error'; }
+  renderTodo();
+}
+function renderTodo(){
+  const thing = heatMode === 'heat' ? '난방기·전등' : heatMode === 'cool' ? '에어컨·전등' : '전등';
+  if (periods === null){ $('todo').innerHTML = '<div class="note">시간표를 불러오는 중이에요…</div>'; $('table').innerHTML = ''; return; }
+  if (periods === 'error'){ $('todo').innerHTML = '<div class="note">시간표를 불러오지 못했어요.</div>'; $('table').innerHTML = ''; return; }
+  if (!periods.length){ $('todo').innerHTML = '<div class="note">오늘은 수업이 없어요. 🎉</div>'; $('table').innerHTML = ''; return; }
+  const todo = [];
+  periods.forEach((p, i) => {
+    const before = periods[i - 1];
+    if (isAway(p.subj) && !(before && isAway(before.subj)))
+      todo.push(`<li><span>🚪</span>${before ? `${before.per}교시 끝나고` : '아침 조회 끝나고'} → ${p.per}교시 ${esc(p.subj)}: ${thing} 끄고 가요</li>`);
+  });
+  todo.push(`<li><span>🏠</span>하교 전: ${thing}·창문 확인하고 가요</li>`);
+  $('todo').innerHTML = `<ul class="todo">${todo.join('')}</ul>`;
+  $('table').innerHTML = periods.map(p => `<div class="period${isAway(p.subj) ? ' away' : ''}"><span class="no">${p.per}교시</span><span class="subj">${esc(p.subj)}</span>${isAway(p.subj) ? '<span class="tag">교실 비어요</span>' : ''}</div>`).join('');
+}
+function renderAwayPick(){
+  const subjects = [...new Set([...DEFAULT_AWAY, '국어', '사회', '역사', '도덕', '수학', '기술·가정', '영어', '진로와 직업'])];
+  $('awayPick').innerHTML = subjects.map(s => `<button class="chip" aria-pressed="${cfg.away.includes(s)}">${s}</button>`).join('');
+  $('awayPick').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    const s = b.textContent;
+    cfg.away = cfg.away.includes(s) ? cfg.away.filter(x => x !== s) : [...cfg.away, s];
+    save(); renderAwayPick(); renderTodo();
+  });
+}
+
+fillClass(); renderAwayPick(); loadWeather(); loadTable();
+</script>
+</body>
+</html>

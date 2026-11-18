@@ -11,11 +11,11 @@
   :root{
     --desk:#e3edf3; --paper:#fffdf6; --ink:#2b3a55; --pencil:#5b6475;
     --heat:#e0613a; --heatbg:#fde9e1; --cool:#2f7fc1; --coolbg:#e2f0fb; --leaf:#2e8b57; --leafbg:#e5f4ea;
-    --away:#fff1b8; --chip:#eef2f5; --pick:#ffcf6e; --bar:#7bc47f; --bar2:#f5c36b;
+    --away:#fff1b8; --chip:#eef2f5; --pick:#ffcf6e; --bar:#7bc47f; --bar2:#f5c36b; --warn:#d9433a;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--desk);color:var(--ink);font-family:'Gaegu',cursive;font-size:21px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:680px;margin:0 auto;padding:20px 16px 60px}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
   .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   h1{font-family:'Jua',sans-serif;font-size:28px;margin:0}
   h1 small{display:block;font-family:'Gaegu',cursive;font-size:18px;color:var(--pencil)}
@@ -28,6 +28,7 @@
   .card{background:var(--paper);border-radius:16px;box-shadow:0 2px 0 #c9d6de,0 10px 24px rgba(30,60,90,.10);padding:16px 18px;margin-bottom:14px}
   .card h2{font-family:'Jua',sans-serif;font-size:19px;margin:0 0 10px;color:var(--pencil);font-weight:400}
   .notice{background:#eef1fb;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-weight:700}
+  .help{color:var(--pencil);font-size:18px;margin:-4px 0 10px}
 
   .verdict{display:flex;align-items:center;gap:12px;border-radius:14px;padding:14px 16px}
   .verdict .big{font-size:42px}
@@ -41,18 +42,21 @@
   .hours b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:18px}
   .hours .cold{background:#dcecf8} .hours .hot{background:#fde3d8}
 
+  .period{display:flex;align-items:center;gap:10px;padding:6px 4px;border-bottom:1px dashed #d6dde3}
+  .period:last-child{border-bottom:0}
+  .period .no{font-family:'Jua',sans-serif;width:52px;color:var(--pencil)}
+  .period .subj{font-weight:700;font-size:22px;flex:1}
+  .period.away{background:var(--away);border-radius:10px}
+  .room{min-width:132px;background:var(--chip);box-shadow:none;font-size:16px}
+  .room[aria-pressed="true"]{background:#fff;outline:2px solid #f0c94a}
+  .send{width:100%;margin-top:10px;background:var(--pick);font-size:19px}
+  .sent{margin-top:10px;background:var(--leafbg);color:var(--leaf);border-radius:12px;padding:10px 12px;font-weight:700}
   .todo{margin:0;padding:0;list-style:none}
   .todo li{font-size:21px;font-weight:700;padding:8px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px dashed #d6dde3}
   .todo li:last-child{border-bottom:0}
   .todo li .txt{flex:1 1 220px}
   .done{background:var(--chip);box-shadow:none;font-size:16px}
   .done[aria-pressed="true"]{background:var(--leafbg);color:var(--leaf)}
-  .period{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px dashed #d6dde3}
-  .period:last-child{border-bottom:0}
-  .period .no{font-family:'Jua',sans-serif;width:52px;color:var(--pencil)}
-  .period .subj{font-weight:700;font-size:22px}
-  .period .tag{margin-left:auto;font-size:17px;font-weight:700;border-radius:12px;padding:2px 10px;background:#fff}
-  .period.away{background:var(--away);border-radius:10px}
   .note{color:var(--pencil);font-size:18px}
   details{margin-top:6px} summary{cursor:pointer;color:var(--pencil);font-size:18px;min-height:44px;display:flex;align-items:center}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -71,6 +75,18 @@
   .big3 b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:24px;color:var(--ink)}
   .sched{margin:0;padding-left:20px;font-size:19px}
   svg text{font-family:'Gaegu',cursive}
+
+  .grid{overflow-x:auto}
+  .grid table{border-collapse:separate;border-spacing:4px;width:100%;font-size:18px}
+  .grid th{font-family:'Jua',sans-serif;font-weight:400;color:var(--pencil);font-size:16px}
+  .grid td{text-align:center;border-radius:8px;height:40px;background:#f4f6f8;min-width:44px}
+  .grid td.cls{background:none;text-align:left;font-weight:700;white-space:nowrap}
+  .grid td.empty{background:#ffe08a;font-weight:700}
+  .grid td.none{background:none}
+  .grid td.st{background:none;font-size:16px;white-space:nowrap}
+  .grid td.st.miss{color:var(--warn)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:17px;color:var(--pencil);margin-top:8px}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:4px;vertical-align:-2px}
   .foot{color:var(--pencil);font-size:17px;line-height:1.4}
   .hidden{display:none !important}
 </style>
@@ -78,8 +94,8 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <h1>🌱 동명 에코 교실<small>냉난방 판단 · 끄고 갔어요 · 아낀 에너지</small></h1>
-    <div class="cls">
+    <h1>🌱 동명 에코 교실<small>아침 확인 · 행정실 안내 · 자가점검 · 아낀 에너지</small></h1>
+    <div class="cls" id="clsBox">
       <select id="grade" aria-label="학년"><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option></select>
       <select id="cls" aria-label="반"></select>
     </div>
@@ -89,6 +105,7 @@
     <button class="tab" data-v="today" aria-selected="true">🌡 오늘</button>
     <button class="tab" data-v="school" aria-selected="false">🏆 우리 학교</button>
     <button class="tab" data-v="energy" aria-selected="false">⚡ 아낀 에너지</button>
+    <button class="tab" data-v="office" aria-selected="false">🏢 행정실</button>
   </div>
 
   <div id="vToday">
@@ -98,20 +115,25 @@
       <div id="weather"><div class="note">날씨를 불러오는 중이에요…</div></div>
     </div>
     <div class="card">
-      <h2>교실이 비는 시간 · 끄고 가요</h2>
-      <div id="todo"><div class="note">시간표를 불러오는 중이에요…</div></div>
-      <div id="table" style="margin-top:8px"></div>
+      <h2>🌅 아침 확인 · 오늘 우리 반 이동수업</h2>
+      <p class="help">우리 학교는 중앙난방이라 행정실에서 난방을 꺼요. 아침에 한 번, 교실이 비는 교시를 확인해서 보내 주세요.</p>
+      <div id="plan"><div class="note">시간표를 불러오는 중이에요…</div></div>
       <details>
         <summary>⚙️ 교실 밖에서 하는 과목 고르기</summary>
         <div class="chips" id="awayPick"></div>
       </details>
     </div>
+    <div class="card">
+      <h2>✅ 나갈 때 자가점검</h2>
+      <div id="todo"></div>
+    </div>
   </div>
   <div class="card hidden" id="vSchool"></div>
   <div class="card hidden" id="vEnergy"></div>
+  <div class="card hidden" id="vOffice"></div>
 
   <p class="foot">※ 학교 실내 온도 기준은 18~28℃예요(학교보건법 시행규칙). 바깥 기온 기준과 전기 계산값은 선생님이 config.js에서 바꿀 수 있어요.<br>
-  ※ 날씨: Open-Meteo·wttr.in(대전) · 시간표·학사일정: 나이스 교육정보 개방 포털 · 「끄고 갔어요」는 반 이름만 저장해요.</p>
+  ※ 날씨: Open-Meteo·wttr.in(대전) · 시간표·학사일정: 나이스 교육정보 개방 포털 · 기록은 반 이름만 저장해요.</p>
 </div>
 
 <script src="config.js"></script>
@@ -122,8 +144,8 @@ const NEIS_KEY = String(CONF.NEIS_KEY || '').trim();
 const SHARE_URL = String(CONF.SHARE_URL || '').trim();
 const HEAT_BELOW = +(CONF.HEAT_BELOW ?? 10), COOL_ABOVE = +(CONF.COOL_ABOVE ?? 28);
 const LAT = CONF.LAT ?? 36.35, LON = CONF.LON ?? 127.38;
-// 아낀 에너지 계산(추정값): 한 번 끄면 한 교시 동안 아낀 것으로 셈
-const KW = { heat: +(CONF.HEATER_KW ?? 3), cool: +(CONF.AC_KW ?? 3), light: +(CONF.LIGHT_KW ?? 0.4) };
+// 아낀 에너지 계산(추정값): 한 교시 동안 끈 것으로 셈
+const KW = { heat: +(CONF.HEATER_KW ?? 3), light: +(CONF.LIGHT_KW ?? 0.4) };
 const PERIOD_MIN = +(CONF.PERIOD_MIN ?? 45), CO2 = +(CONF.CO2_KG_PER_KWH ?? 0.4781);
 const CLASSES = { 1: 3, 2: 3, 3: 2 };
 const ALL_GC = ['1-1', '1-2', '1-3', '2-1', '2-2', '2-3', '3-1', '3-2'];
@@ -137,26 +159,31 @@ const store = {
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const ymd = d => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
-const WD = ['일', '월', '화', '수', '목', '금', '토'];
 const md = s => `${+s.slice(4, 6)}/${+s.slice(6)}`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const norm = s => String(s).replace(/[\s·Ⅰ-Ⅻ]/g, '');
 const gcName = gc => gc.replace('-', '학년 ') + '반';
 
 let cfg = Object.assign({ grade: '1', cls: '1', away: DEFAULT_AWAY }, store.get('eco-cfg', {}));
-const qs = new URLSearchParams(location.search).get('반');
+const params = new URLSearchParams(location.search);
+const qs = params.get('반');
 if (qs && /^[1-3]-[1-3]$/.test(qs) && !store.get('eco-cfg', null)){ [cfg.grade, cfg.cls] = qs.split('-'); }
 let device = store.get('eco-device', '');
 if (!device){ device = 'd' + Math.random().toString(36).slice(2, 10); store.set('eco-device', device); }
 const gcOf = () => `${cfg.grade}-${cfg.cls}`;
 const TODAY = ymd(new Date());
-let heatMode = null, periods = null, offs = [], view = 'today';
+let heatMode = null, periods = null, offs = [], plans = [], view = 'today';
+let draft = null;   // 아침 확인에서 고른 빈 교시 Set
 
 async function neis(service, params){
   const key = NEIS_KEY ? `&KEY=${encodeURIComponent(NEIS_KEY)}` : '';
-  const j = await (await fetch(`https://open.neis.go.kr/hub/${service}?Type=json&pSize=100&ATPT_OFCDC_SC_CODE=${OFFICE}&SD_SCHUL_CODE=${SCHOOL}${key}&${params}`)).json();
+  const j = await (await fetch(`https://open.neis.go.kr/hub/${service}?Type=json&pSize=300&ATPT_OFCDC_SC_CODE=${OFFICE}&SD_SCHUL_CODE=${SCHOOL}${key}&${params}`)).json();
   return j[service] ? j[service][1].row : [];
 }
+const fetchJson = (url, ms = 8000) => Promise.race([
+  fetch(url).then(r => r.json()),
+  new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))
+]);
 
 // ---------- 학년·반 ----------
 function fillClass(){
@@ -165,8 +192,8 @@ function fillClass(){
   if (+cfg.cls > CLASSES[cfg.grade]) cfg.cls = '1';
   $('cls').value = cfg.cls;
 }
-$('grade').onchange = () => { cfg.grade = $('grade').value; cfg.cls = '1'; save(); fillClass(); loadTable(); render(); };
-$('cls').onchange = () => { cfg.cls = $('cls').value; save(); loadTable(); render(); };
+$('grade').onchange = () => { cfg.grade = $('grade').value; cfg.cls = '1'; save(); fillClass(); draft = null; loadTable(); render(); };
+$('cls').onchange = () => { cfg.cls = $('cls').value; save(); draft = null; loadTable(); render(); };
 function save(){ store.set('eco-cfg', cfg); }
 
 // ---------- 오늘 학사일정 ----------
@@ -178,12 +205,7 @@ async function loadNotice(){
   }catch(e){}
 }
 
-// ---------- 날씨 → 냉난방 판단 ----------
-const fetchJson = (url, ms = 8000) => Promise.race([
-  fetch(url).then(r => r.json()),
-  new Promise((_, no) => setTimeout(() => no(new Error('timeout')), ms))
-]);
-// 날씨: Open-Meteo(1시간 간격) → 안 되면 wttr.in(3시간 간격)
+// ---------- 날씨 → 냉난방 판단 (Open-Meteo → 안 되면 wttr.in) ----------
 async function getWeather(){
   try{
     const j = await fetchJson(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m&hourly=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1`);
@@ -200,9 +222,9 @@ async function loadWeather(){
     const now = Math.round(w.now);
     heatMode = lo < HEAT_BELOW ? 'heat' : hi >= COOL_ABOVE ? 'cool' : 'off';
     const V = {
-      heat: ['🔥', '난방 켜요', `수업 시간 바깥 최저 ${Math.round(lo)}℃ · 교실은 18~20℃로 맞춰요`],
-      cool: ['❄️', '냉방 켜요', `수업 시간 바깥 최고 ${Math.round(hi)}℃ · 교실은 26℃ 정도로 맞춰요`],
-      off: ['🌿', '오늘은 꺼도 돼요', `수업 시간 바깥 ${Math.round(lo)}~${Math.round(hi)}℃ · 쉬는 시간에 창문 환기만 해요`]
+      heat: ['🔥', '난방하는 날이에요', `수업 시간 바깥 최저 ${Math.round(lo)}℃ · 빈 교실은 행정실에 꼭 알려요`],
+      cool: ['❄️', '냉방하는 날이에요', `수업 시간 바깥 최고 ${Math.round(hi)}℃ · 빈 교실은 행정실에 꼭 알려요`],
+      off: ['🌿', '냉난방 없이도 괜찮아요', `수업 시간 바깥 ${Math.round(lo)}~${Math.round(hi)}℃ · 쉬는 시간에 창문 환기만 해요`]
     }[heatMode];
     $('weather').innerHTML = `<div class="verdict ${heatMode}"><span class="big">${V[0]}</span><div><div class="say">${V[1]}</div><div class="sub">지금 대전 ${now}℃ · ${V[2]}</div></div></div>
       <div class="hours">${hours.map(x => `<div class="${x.t < HEAT_BELOW ? 'cold' : x.t >= COOL_ABOVE ? 'hot' : ''}"><b>${x.h}시</b>${Math.round(x.t)}℃</div>`).join('')}</div>`;
@@ -210,13 +232,12 @@ async function loadWeather(){
     heatMode = null;
     $('weather').innerHTML = '<div class="note">날씨를 불러오지 못했어요. 인터넷 연결을 확인해요.</div>';
   }
-  renderTodo();
 }
 
-// ---------- 시간표 → 교실이 비는 시간 ----------
+// ---------- 시간표 ----------
 const isAway = subj => cfg.away.some(a => norm(subj).includes(norm(a)));
 async function loadTable(){
-  periods = null; renderTodo();
+  periods = null; renderToday();
   const d = new Date();
   try{
     if (d.getDay() === 0 || d.getDay() === 6){ periods = []; }
@@ -227,47 +248,70 @@ async function loadTable(){
       periods = [...by.entries()].sort((a, b) => a[0] - b[0]).map(([per, subj]) => ({ per, subj }));
     }
   }catch(e){ periods = 'error'; }
-  renderTodo();
+  renderToday();
 }
 
-// ---------- 공유 서버(끄고 갔어요) ----------
+// ---------- 공유 서버 ----------
 async function pull(from, to){
   if (!SHARE_URL) return;
   try{
     const j = await (await fetch(`${SHARE_URL}?from=${from}&to=${to}`)).json();
-    if (j.ok){ offs = offs.filter(r => r.date < from || r.date > to).concat(j.rows); }
+    if (j.ok){
+      offs = offs.filter(r => r.date < from || r.date > to).concat(j.rows || []);
+      plans = plans.filter(r => r.date < from || r.date > to).concat(j.plans || []);
+    }
   }catch(e){}
 }
-const doneToday = per => offs.some(r => r.date === TODAY && r.gc === gcOf() && r.per === per);
-async function toggle(per, what){
-  const on = !doneToday(per);
-  const res = await fetch(SHARE_URL, { method: 'POST', body: JSON.stringify({ gc: gcOf(), date: TODAY, per, what, on, did: device }) });
+async function post(body){
+  const res = await fetch(SHARE_URL, { method: 'POST', body: JSON.stringify(Object.assign({ gc: gcOf(), date: TODAY, did: device }, body)) });
   const j = await res.json();
   if (!j.ok) throw new Error(j.error || '저장하지 못했어요');
-  offs = offs.filter(r => r.date !== TODAY).concat(j.rows);
+  offs = offs.filter(r => r.date !== TODAY).concat(j.rows || []);
+  plans = plans.filter(r => r.date !== TODAY).concat(j.plans || []);
 }
+const myPlan = () => plans.find(p => p.date === TODAY && p.gc === gcOf());
+const doneToday = per => offs.some(r => r.date === TODAY && r.gc === gcOf() && r.per === per);
 
-function renderTodo(){
-  const thing = heatMode === 'heat' ? '난방기·전등' : heatMode === 'cool' ? '에어컨·전등' : '전등';
-  if (periods === null){ $('todo').innerHTML = '<div class="note">시간표를 불러오는 중이에요…</div>'; $('table').innerHTML = ''; return; }
-  if (periods === 'error'){ $('todo').innerHTML = '<div class="note">시간표를 불러오지 못했어요.</div>'; $('table').innerHTML = ''; return; }
-  if (!periods.length){ $('todo').innerHTML = '<div class="note">오늘은 수업이 없어요. 🎉</div>'; $('table').innerHTML = ''; return; }
+// ---------- 오늘 화면 ----------
+function renderToday(){
+  if (periods === null){ $('plan').innerHTML = '<div class="note">시간표를 불러오는 중이에요…</div>'; $('todo').innerHTML = ''; return; }
+  if (periods === 'error'){ $('plan').innerHTML = '<div class="note">시간표를 불러오지 못했어요.</div>'; $('todo').innerHTML = ''; return; }
+  if (!periods.length){ $('plan').innerHTML = '<div class="note">오늘은 수업이 없어요. 🎉</div>'; $('todo').innerHTML = ''; return; }
+
+  // 🌅 아침 확인
+  const sent = myPlan();
+  if (!draft) draft = new Set(sent ? sent.empty : periods.filter(p => isAway(p.subj)).map(p => p.per));
+  $('plan').innerHTML = periods.map(p => {
+    const empty = draft.has(p.per);
+    return `<div class="period${empty ? ' away' : ''}"><span class="no">${p.per}교시</span><span class="subj">${esc(p.subj)}</span>`
+      + `<button class="room" data-per="${p.per}" aria-pressed="${empty}">${empty ? '🚪 교실 비어요' : '🏫 교실에서 해요'}</button></div>`;
+  }).join('')
+    + (SHARE_URL ? `<button class="send" id="sendPlan">📨 확인했어요 · 행정실에 보내기</button>` : '<p class="foot">※ 행정실 보내기는 선생님이 공유 서버를 연결하면 열려요.</p>')
+    + (sent ? `<div class="sent">✅ ${esc(sent.at)}에 보냈어요 · 교실 비는 교시: ${sent.empty.length ? sent.empty.map(n => n + '교시').join(', ') : '없음'}</div>` : '');
+  $('plan').querySelectorAll('.room').forEach(b => b.onclick = () => {
+    const n = +b.dataset.per; draft.has(n) ? draft.delete(n) : draft.add(n); renderToday();
+  });
+  if ($('sendPlan')) $('sendPlan').onclick = async () => {
+    $('sendPlan').disabled = true; $('sendPlan').textContent = '보내는 중…';
+    try{ await post({ action: 'plan', empty: [...draft], total: periods.length }); }catch(e){ alert(e.message); }
+    renderToday();
+  };
+
+  // ✅ 자가점검
   const items = [];
   periods.forEach((p, i) => {
     const before = periods[i - 1];
-    if (isAway(p.subj) && !(before && isAway(before.subj)))
-      items.push({ per: p.per, icon: '🚪', txt: `${before ? `${before.per}교시 끝나고` : '아침 조회 끝나고'} → ${p.per}교시 ${esc(p.subj)}: ${thing} 끄고 가요` });
+    if (draft.has(p.per) && !(before && draft.has(before.per)))
+      items.push({ per: p.per, icon: '🚪', txt: `${before ? `${before.per}교시 끝나고` : '아침 조회 끝나고'} → ${p.per}교시 ${esc(p.subj)}: 전등 끄고, 창문 닫고 가요` });
   });
-  items.push({ per: HOME, icon: '🏠', txt: `하교 전: ${thing}·창문 확인하고 가요` });
+  items.push({ per: HOME, icon: '🏠', txt: '하교 전: 전등·창문·컴퓨터 확인하고 가요' });
   $('todo').innerHTML = `<ul class="todo">${items.map(it => `<li><span>${it.icon}</span><span class="txt">${it.txt}</span>`
-    + (SHARE_URL ? `<button class="done" data-per="${it.per}" aria-pressed="${doneToday(it.per)}">${doneToday(it.per) ? '✅ 끄고 갔어요' : '☐ 끄고 갔어요'}</button>` : '') + '</li>').join('')}</ul>`
-    + (SHARE_URL ? '' : '<p class="foot">※ 「끄고 갔어요」 기록은 선생님이 공유 서버를 연결하면 열려요.</p>');
+    + (SHARE_URL ? `<button class="done" data-per="${it.per}" aria-pressed="${doneToday(it.per)}">${doneToday(it.per) ? '✅ 끄고 갔어요' : '☐ 끄고 갔어요'}</button>` : '') + '</li>').join('')}</ul>`;
   $('todo').querySelectorAll('.done').forEach(b => b.onclick = async () => {
     b.disabled = true;
-    try{ await toggle(+b.dataset.per, thing); }catch(e){ alert(e.message); }
-    renderTodo();
+    try{ await post({ per: +b.dataset.per, what: '전등', on: !doneToday(+b.dataset.per) }); }catch(e){ alert(e.message); }
+    renderToday();
   });
-  $('table').innerHTML = periods.map(p => `<div class="period${isAway(p.subj) ? ' away' : ''}"><span class="no">${p.per}교시</span><span class="subj">${esc(p.subj)}</span>${isAway(p.subj) ? '<span class="tag">교실 비어요</span>' : ''}</div>`).join('');
 }
 function renderAwayPick(){
   const subjects = [...new Set([...DEFAULT_AWAY, '국어', '사회', '역사', '도덕', '수학', '기술·가정', '영어', '진로와 직업'])];
@@ -275,7 +319,7 @@ function renderAwayPick(){
   $('awayPick').querySelectorAll('.chip').forEach(b => b.onclick = () => {
     const s = b.textContent;
     cfg.away = cfg.away.includes(s) ? cfg.away.filter(x => x !== s) : [...cfg.away, s];
-    save(); renderAwayPick(); renderTodo();
+    save(); renderAwayPick(); if (!myPlan()) draft = null; renderToday();
   });
 }
 
@@ -293,67 +337,100 @@ async function renderSchool(){
   await pull(from, to);
   let sched = [];
   try{ sched = (await neis('SchoolSchedule', `AA_FROM_YMD=${from}&AA_TO_YMD=${to}`)).filter(r => !/토요휴업일/.test(r.EVENT_NM)); }catch(e){}
-  const cnt = Object.fromEntries(ALL_GC.map(gc => [gc, 0]));
-  offs.filter(r => r.date >= from && r.date <= to).forEach(r => { if (cnt[r.gc] != null) cnt[r.gc]++; });
-  const max = Math.max(1, ...Object.values(cnt));
-  const top = Math.max(...Object.values(cnt));
-  const kings = ALL_GC.filter(gc => cnt[gc] === top && top > 0);
+  const pt = Object.fromEntries(ALL_GC.map(gc => [gc, { plan: 0, off: 0 }]));
+  plans.filter(r => r.date >= from && r.date <= to).forEach(r => { if (pt[r.gc]) pt[r.gc].plan++; });
+  offs.filter(r => r.date >= from && r.date <= to).forEach(r => { if (pt[r.gc]) pt[r.gc].off++; });
+  const score = gc => pt[gc].plan + pt[gc].off;
+  const max = Math.max(1, ...ALL_GC.map(score)), top = Math.max(...ALL_GC.map(score));
+  const kings = ALL_GC.filter(gc => score(gc) === top && top > 0);
   el.innerHTML = `<h2>🏆 이번 주(${md(from)}~${md(to)}) 에코 왕</h2>
-    <div class="king">${kings.length ? `👑 ${kings.map(gcName).join(', ')} · ${top}번 끄고 갔어요` : '아직 기록이 없어요. 우리 반이 첫 번째가 되어 봐요!'}</div>
-    <div class="bars">${ALL_GC.map(gc => `<div class="r${gc === gcOf() ? ' me' : ''}"><span>${gcName(gc)}</span><span class="t"><i style="width:${cnt[gc] / max * 100}%"></i></span><span class="n">${cnt[gc]}번</span></div>`).join('')}</div>
+    <div class="king">${kings.length ? `👑 ${kings.map(gcName).join(', ')} · ${top}점` : '아직 기록이 없어요. 우리 반이 첫 번째가 되어 봐요!'}</div>
+    <p class="help">에코 점수 = 🌅 아침 확인 보낸 날 + ✅ 끄고 갔어요</p>
+    <div class="bars">${ALL_GC.map(gc => `<div class="r${gc === gcOf() ? ' me' : ''}"><span>${gcName(gc)}</span><span class="t"><i style="width:${score(gc) / max * 100}%"></i></span><span class="n">${score(gc)}점</span></div>`).join('')}</div>
     <h2 style="margin-top:16px">📅 이번 주 학교 일정</h2>
     ${sched.length ? `<ul class="sched">${sched.map(r => `<li>${md(r.AA_YMD)} ${esc(r.EVENT_NM)}</li>`).join('')}</ul>` : '<div class="note">이번 주 특별한 일정이 없어요.</div>'}`;
 }
 
 // ---------- 아낀 에너지(이번 달) ----------
-const kwhOf = r => {
-  const w = r.what || '';
-  const kw = (w.includes('난방') ? KW.heat : 0) + (w.includes('에어컨') ? KW.cool : 0) + (w.includes('전등') ? KW.light : 0);
-  return kw * PERIOD_MIN / 60;
-};
 async function renderEnergy(){
   const el = $('vEnergy');
   if (!SHARE_URL){ el.innerHTML = '<div class="note">아낀 에너지는 선생님이 공유 서버를 연결하면 볼 수 있어요.</div>'; return; }
   const d = new Date(), from = ymd(new Date(d.getFullYear(), d.getMonth(), 1)), to = TODAY;
   el.innerHTML = '<div class="note">불러오는 중이에요…</div>';
   await pull(from, to);
-  const rows = offs.filter(r => r.date >= from && r.date <= to);
-  const total = rows.reduce((s, r) => s + kwhOf(r), 0);
+  const h = PERIOD_MIN / 60;
+  const ps = plans.filter(r => r.date >= from && r.date <= to), os = offs.filter(r => r.date >= from && r.date <= to);
+  const emptyPeriods = ps.reduce((s, p) => s + p.empty.length, 0);
+  const heatKwh = emptyPeriods * KW.heat * h, lightKwh = os.length * KW.light * h, total = heatKwh + lightKwh;
   const byGc = Object.fromEntries(ALL_GC.map(gc => [gc, 0]));
-  rows.forEach(r => { if (byGc[r.gc] != null) byGc[r.gc] += kwhOf(r); });
+  ps.forEach(p => { if (byGc[p.gc] != null) byGc[p.gc] += p.empty.length * KW.heat * h; });
+  os.forEach(r => { if (byGc[r.gc] != null) byGc[r.gc] += KW.light * h; });
   const byDay = {};
-  rows.forEach(r => { byDay[r.date] = (byDay[r.date] || 0) + kwhOf(r); });
+  ps.forEach(p => { byDay[p.date] = (byDay[p.date] || 0) + p.empty.length * KW.heat * h; });
+  os.forEach(r => { byDay[r.date] = (byDay[r.date] || 0) + KW.light * h; });
   const days = Object.keys(byDay).sort();
   const maxG = Math.max(0.1, ...Object.values(byGc)), maxD = Math.max(0.1, ...Object.values(byDay));
   const W = 600, H = 150, cw = days.length ? (W - 20) / days.length : 0;
   const svg = days.length ? `<svg viewBox="0 0 ${W} ${H + 24}" width="100%" role="img" aria-label="날짜별 아낀 전기">${days.map((k, i) => {
-    const h = byDay[k] / maxD * (H - 24), x = 10 + i * cw + cw * .15;
-    return `<rect x="${x}" y="${H - h}" width="${cw * .7}" height="${h}" rx="3" fill="#7bc47f"><title>${byDay[k].toFixed(1)} kWh</title></rect>`
+    const hh = byDay[k] / maxD * (H - 24), x = 10 + i * cw + cw * .15;
+    return `<rect x="${x}" y="${H - hh}" width="${cw * .7}" height="${hh}" rx="3" fill="#7bc47f"><title>${byDay[k].toFixed(1)} kWh</title></rect>`
       + `<text x="${x + cw * .35}" y="${H + 18}" font-size="${days.length > 12 ? 11 : 15}" text-anchor="middle" fill="#2b3a55">${md(k)}</text>`;
   }).join('')}</svg>` : '<div class="note">아직 기록이 없어요.</div>';
-  el.innerHTML = `<h2>⚡ ${+from.slice(4, 6)}월 우리 학교가 아낀 에너지</h2>
-    <div class="big3"><div>끄고 간 횟수<b>${rows.length}번</b></div><div>아낀 전기<b>${total.toFixed(1)} kWh</b></div><div>줄인 탄소<b>${(total * CO2).toFixed(1)} kg</b></div></div>
-    <h2>📈 날짜별 아낀 전기</h2>${svg}
-    <h2 style="margin-top:14px">🏫 반별 아낀 전기</h2>
+  el.innerHTML = `<h2>⚡ ${+from.slice(4, 6)}월 우리 학교 에너지 실천</h2>
+    <div class="big3"><div>행정실에 알린<br>빈 교실<b>${emptyPeriods}교시</b></div><div>아낄 수 있는 전기<b>${total.toFixed(1)} kWh</b></div><div>줄일 수 있는 탄소<b>${(total * CO2).toFixed(1)} kg</b></div></div>
+    <p class="help">🔥 난방(빈 교실 알림) ${heatKwh.toFixed(1)} kWh + 💡 전등(끄고 갔어요 ${os.length}번) ${lightKwh.toFixed(1)} kWh</p>
+    <h2>📈 날짜별</h2>${svg}
+    <h2 style="margin-top:14px">🏫 반별</h2>
     <div class="bars">${ALL_GC.map(gc => `<div class="r${gc === gcOf() ? ' me' : ''}"><span>${gcName(gc)}</span><span class="t"><i style="width:${byGc[gc] / maxG * 100}%;background:var(--bar2)"></i></span><span class="n">${byGc[gc].toFixed(1)}</span></div>`).join('')}</div>
-    <p class="foot">※ 계산 방법(추정): 한 번 끄면 한 교시(${PERIOD_MIN}분) 동안 아낀 것으로 셈해요. 난방기 ${KW.heat}kW · 에어컨 ${KW.cool}kW · 전등 ${KW.light}kW, 전기 1kWh당 탄소 ${CO2}kg으로 계산했어요. 우리 학교 실제 기기 값을 조사해서 바꿔 보세요!</p>`;
+    <p class="foot">※ 추정값이에요. 행정실이 알림대로 빈 교실 난방을 한 교시(${PERIOD_MIN}분) 끄고, 학생이 전등을 끈 것으로 계산해요. 교실 난방 ${KW.heat}kW · 전등 ${KW.light}kW · 전기 1kWh당 탄소 ${CO2}kg. 우리 학교 실제 값을 조사해서 config.js를 바꿔 보세요!</p>`;
+}
+
+// ---------- 🏢 행정실 ----------
+async function renderOffice(){
+  const el = $('vOffice');
+  if (!SHARE_URL){ el.innerHTML = '<div class="note">행정실 화면은 선생님이 공유 서버를 연결하면 볼 수 있어요.</div>'; return; }
+  el.innerHTML = '<div class="note">불러오는 중이에요…</div>';
+  await pull(TODAY, TODAY);
+  const maxPer = Math.max(6, ...plans.filter(p => p.date === TODAY).map(p => p.total || 0), ...plans.filter(p => p.date === TODAY).flatMap(p => p.empty));
+  const pers = Array.from({ length: maxPer }, (_, i) => i + 1);
+  const sentCount = ALL_GC.filter(gc => plans.some(p => p.date === TODAY && p.gc === gc)).length;
+  const rows = ALL_GC.map(gc => {
+    const p = plans.find(x => x.date === TODAY && x.gc === gc);
+    const offSet = new Set(offs.filter(r => r.date === TODAY && r.gc === gc).map(r => r.per));
+    const cells = pers.map(n => {
+      if (!p) return '<td class="none"></td>';
+      if (n > (p.total || maxPer)) return '<td class="none"></td>';
+      return p.empty.includes(n) ? `<td class="empty">비어요${offSet.has(n) ? '<br>💡✅' : ''}</td>` : '<td></td>';
+    }).join('');
+    return `<tr><td class="cls">${gcName(gc)}</td>${cells}<td class="st${p ? '' : ' miss'}">${p ? `✅ ${esc(p.at)}` : '아직 안 보냄'}</td></tr>`;
+  }).join('');
+  const d = new Date();
+  el.innerHTML = `<h2>🏢 ${d.getMonth() + 1}/${d.getDate()} 교실 비는 시간 (행정실 중앙난방 안내)</h2>
+    <p class="help">반 학생들이 아침에 확인해서 보낸 이동수업이에요. 노란 칸 교실은 그 교시에 난방을 줄이거나 꺼 주세요. (${sentCount}/8반 보냄)</p>
+    <div class="grid"><table><tr><th></th>${pers.map(n => `<th>${n}교시</th>`).join('')}<th>아침 확인</th></tr>${rows}</table></div>
+    <div class="legend"><span><i style="background:#ffe08a"></i>교실 비어요</span><span>💡✅ 학생이 전등 끄고 감</span></div>
+    <button class="send" id="refresh" style="margin-top:12px">🔄 새로 고침</button>`;
+  $('refresh').onclick = renderOffice;
 }
 
 // ---------- 탭 ----------
 function render(){
-  $('vToday').classList.toggle('hidden', view !== 'today');
-  $('vSchool').classList.toggle('hidden', view !== 'school');
-  $('vEnergy').classList.toggle('hidden', view !== 'energy');
-  if (view === 'today') renderTodo();
+  ['today', 'school', 'energy', 'office'].forEach(v => $('v' + v[0].toUpperCase() + v.slice(1)).classList.toggle('hidden', view !== v));
+  $('clsBox').classList.toggle('hidden', view === 'office');
+  if (view === 'today') renderToday();
   if (view === 'school') renderSchool();
   if (view === 'energy') renderEnergy();
+  if (view === 'office') renderOffice();
 }
-document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
-  view = t.dataset.v; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); render();
-});
+function go(v){
+  view = v; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.v === v)); render();
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => go(t.dataset.v));
 
 fillClass(); renderAwayPick(); loadNotice(); loadWeather(); loadTable();
-pull(TODAY, TODAY).then(renderTodo);
+pull(TODAY, TODAY).then(() => { draft = null; renderToday(); });
+if (params.has('행정실') || params.get('view') === 'office') go('office');
+setInterval(() => { if (view === 'office') renderOffice(); }, 120000);
 </script>
 </body>
 </html>
